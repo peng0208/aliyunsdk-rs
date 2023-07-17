@@ -1,2 +1,2 @@
 ### aliyunsdk-rs
-Aliyun SDK for Rust.
+A simple Aliyun sdk library for rust, based on async-std.

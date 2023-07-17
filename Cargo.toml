@@ -1,12 +1,12 @@
 [package]
 name = "aliyunsdk-rs"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 authors = ["Peng <397192202@qq.com>"]
-description = "Aliyun SDK for Rust."
+description = "Aliyun sdk for rust, based on async-std."
 repository = "https://github.com/peng0208/aliyunsdk-rs"
 license = "MIT"
-keywords = ["sdk", "aliyun"]
+keywords = ["sdk", "aliyun", "async-std"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
