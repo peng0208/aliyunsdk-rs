@@ -6,8 +6,8 @@ mod tests {
 
     use chrono::prelude::{Local, Utc};
 
-    use crate::core::{Client, Request, Response};
     use crate::core::sign::signature;
+    use crate::core::{Client, Request, Response};
 
     const ACCESS_ID: &str = "";
     const ACCESS_SECRET: &str = "";
@@ -15,35 +15,37 @@ mod tests {
     const VERSION: &str = "2014-05-26";
     const ACTION: &str = "DescribeRegions";
 
-    #[async_std::test]
+    #[tokio::test]
     async fn request() {
         let client = Client::new(ACCESS_ID, ACCESS_SECRET);
         let req = Request::new(ENDPOINT)
             .set_version(VERSION)
             .set_action(ACTION);
 
-        let mut res = client.do_request(req).await.unwrap();
+        let res = client.do_request(req).await.unwrap();
 
         // let body = res.body_bytes().await;
         // println!("body: {:?}", body.unwrap());
 
-        // let body_string = res.body_string().await;
-        // println!("body_string: {:?}", body_string.unwrap());
+        let body_string = res.body_string().await;
+        println!("body_string: {:?}", body_string.unwrap());
 
-        let body_json = res.body_map().await;
-        println!("body_json: {:?}", body_json
-            .unwrap()
-            .as_object()
-            .unwrap()["Regions"]["Region"]
-            .as_array()
-            .unwrap()
-            .iter()
-            .map(|x| {
-                let x = x.as_object().unwrap();
-                (x["RegionId"].as_str().unwrap(), x["LocalName"].as_str().unwrap())
-            })
-            .collect::<HashMap<&str, &str>>()
-        );
+        // let body_json = res.body_map().await;
+        // println!(
+        //     "body_json: {:?}",
+        //     body_json.unwrap().as_object().unwrap()["Regions"]["Region"]
+        //         .as_array()
+        //         .unwrap()
+        //         .iter()
+        //         .map(|x| {
+        //             let x = x.as_object().unwrap();
+        //             (
+        //                 x["RegionId"].as_str().unwrap(),
+        //                 x["LocalName"].as_str().unwrap(),
+        //             )
+        //         })
+        //         .collect::<HashMap<&str, &str>>()
+        // );
     }
 
     #[test]

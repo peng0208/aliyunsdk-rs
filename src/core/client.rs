@@ -25,15 +25,19 @@ impl Client {
         self
     }
 
-    pub async fn do_request(&self, request: Request) -> Result<Response, http_types::Error> {
-        let response = surf::Client::new()
-            .send(self.build_request(request))
+    pub async fn do_request(
+        &self,
+        request: Request,
+    ) -> Result<Response, Box<dyn std::error::Error>> {
+        let response = reqwest::Client::new()
+            .execute(self.build_request(request))
             .await?;
 
         Ok(Response::new(response))
     }
 
-    fn build_request(&self, request: Request) -> surf::Request {
+    fn build_request(&self, request: Request) -> reqwest::Request {
+        let client = reqwest::Client::new();
         let request = request
             .set_access_key_id(&self.access_key_id)
             .set_signature_nonce(Local::now().timestamp_subsec_nanos().to_string().as_str())
@@ -54,9 +58,8 @@ impl Client {
         );
 
         match method {
-            "GET" => surf::get(url).build(),
-            _ => surf::post(url).build()
+            "GET" => client.get(url).build().unwrap(),
+            _ => client.post(url).build().unwrap(),
         }
     }
 }
-

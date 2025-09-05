@@ -1,6 +1,6 @@
 use aliyunsdk_rs::{Client, Request};
 
-#[async_std::main]
+#[tokio::main]
 async fn main() {
     // example: DescribeRegions, get ecs regions
     // set client access key
@@ -12,7 +12,7 @@ async fn main() {
         .set_action("DescribeRegions");
 
     // receive response
-    let mut res = client.do_request(req).await.unwrap();
+    let res = client.do_request(req).await.unwrap();
 
     println!("body_map: {:?}", res.body_map().await);
 }

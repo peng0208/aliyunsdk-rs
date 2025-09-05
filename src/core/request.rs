@@ -1,7 +1,8 @@
-use std::collections::HashMap;
+use bytes::Bytes;
 use http_types::convert::DeserializeOwned;
+use reqwest;
 use serde_json::Value;
-use surf;
+use std::collections::HashMap;
 
 #[derive(Debug)]
 pub struct Request {
@@ -91,47 +92,35 @@ impl Request {
 
 #[derive(Debug)]
 pub struct Response {
-    base: surf::Response,
+    base: reqwest::Response,
 }
 
 impl Response {
-    pub fn new(base: surf::Response) -> Self {
+    pub fn new(base: reqwest::Response) -> Self {
         Self { base }
     }
 
-    pub fn resp(&self) -> &surf::Response { &self.base }
-
-    pub fn status(&self) -> String { self.base.status().to_string() }
-
-    pub async fn body_bytes(&mut self) -> Option<Vec<u8>> {
-        match self.base.body_bytes().await {
-            Ok(data) => Some(data),
-            Err(_) => None
-        }
+    pub fn resp(&self) -> &reqwest::Response {
+        &self.base
     }
 
-    pub async fn body_string(&mut self) -> Option<String> {
-        match self.base.body_string().await {
-            Ok(data) => Some(data),
-            Err(_) => None
-        }
+    pub fn status(&self) -> String {
+        self.base.status().to_string()
     }
 
-    pub async fn body_map(&mut self) -> Option<Value> {
-        match self.base.body_json().await {
-            Ok(data) => Some(data),
-            Err(_) => {
-                None
-            }
-        }
+    pub async fn body_bytes(self) -> Option<Bytes> {
+        (self.base.bytes().await).ok()
     }
 
-    pub async fn body_json<T: DeserializeOwned>(&mut self) -> Option<T> {
-        match self.base.body_json().await {
-            Ok(data) => Some(data),
-            Err(_) => {
-                None
-            }
-        }
+    pub async fn body_string(self) -> Option<String> {
+        (self.base.text().await).ok()
+    }
+
+    pub async fn body_map(self) -> Option<Value> {
+        (self.base.json().await).ok()
+    }
+
+    pub async fn body_json<T: DeserializeOwned>(self) -> Option<T> {
+        (self.base.json().await).ok()
     }
 }
