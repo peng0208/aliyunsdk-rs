@@ -1,9 +1,9 @@
 [package]
 name = "aliyunsdk-rs"
-version = "1.0.0"
+version = "1.0.1"
 edition = "2021"
 authors = ["Peng <397192202@qq.com>"]
-description = "Aliyun sdk for rust, based on async-std."
+description = "Aliyun sdk for rust, based on tokio."
 repository = "https://github.com/peng0208/aliyunsdk-rs"
 license = "MIT"
 keywords = ["sdk", "tokio", "aliyun", "aliyun-sdk", "alibaba-cloud-sdk"]
